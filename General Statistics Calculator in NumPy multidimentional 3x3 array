@@ -1,0 +1,37 @@
+import numpy as np
+
+def calculates(list):
+
+    array_t = np.array(list)
+    array = array_t.reshape(3, 3)
+
+    mean_columns = [array[:,0].mean(), array[:,1].mean(),array[:,2].mean()]
+    mean_rows = [array[0,:].mean(), array[1,:].mean(),array[2,:].mean()]
+
+    var_columns = [array[:, 0].var(), array[:, 1].var(), array[:, 2].var()]
+    var_rows = [array[0, :].var(), array[1, :].var(), array[2, :].var()]
+
+    std_columns = [array[:, 0].std(), array[:, 1].std(), array[:, 2].std()]
+    std_rows = [array[0, :].std(), array[1, :].std(), array[2, :].std()]
+
+    max_columns = [array[:, 0].max(), array[:, 1].max(), array[:, 2].max()]
+    max_rows = [array[0, :].max(), array[1, :].max(), array[2, :].max()]
+
+    min_columns = [array[:, 0].min(), array[:, 1].min(), array[:, 2].min()]
+    min_rows = [array[0, :].min(), array[1, :].min(), array[2, :].min()]
+
+    sum_columns = [array[:, 0].sum(), array[:, 1].sum(), array[:, 2].sum()]
+    sum_rows = [array[0, :].sum(), array[1, :].sum(), array[2, :].sum()]
+
+    if len(list) != 9:
+        raise ValueError("List must contain nine numbers.")
+    else:
+
+        return {
+        'mean': [mean_columns, mean_rows, array.mean()],
+        'variance': [var_columns, var_rows, array.var()],
+        'standard deviation': [std_columns, std_rows, array.std()],
+        'max': [max_columns, max_rows, array.max()],
+        'min': [min_columns, min_rows, array.min()],
+        'sum': [sum_columns, sum_rows, array.sum()]
+        }
