@@ -1,0 +1,69 @@
+import numpy as np
+import pandas as pd
+import re
+
+# So, here i analyzed the data from
+#Dua, D. and Graff, C. (2019). UCI Machine Learning Repository. 
+#Irvine, CA: University of California, School of Information and Computer Science.
+
+df = pd.read_csv("C:\Marcin Wyroślak\pythonProject\Census.csv", header=None)
+df.rename(columns={0: 'age',
+                   1: 'workclass',
+                   2: 'fnlwgt',
+                   3: 'education',
+                   4: 'education-num',
+                   5: 'marital-status',
+                   6: 'occupation',
+                   7: 'relationship',
+                   8: 'race',
+                   9: 'sex',
+                   10: 'capital-gain',
+                   11: 'capital-loss',
+                   12: 'hours-per-week',
+                   13: 'native-country',
+                   14: 'salary'
+},inplace=True)
+
+# How many people of each race are represented in this dataset? 
+df['race'].value_counts().to_list()
+
+# What is the average age of men?
+age_df = df[df['sex'] == ' Male']
+round(age_df['age'].mean(), 1)
+
+# What is the percentage of people who have a Bachelor's degree?
+total_bachelors = len(df[df['education'] == ' Bachelors'])
+total_education = len(df['education'])
+round(total_bachelors / total_education*100,1)
+
+# What percentage of people with advanced education (Bachelors, Masters, or Doctorate) make more than 50K?
+df_50K = df[df['salary'] == ' >50K']
+total_bach = len(df_50K[df_50K['education'] == ' Bachelors'])
+total_mast = len(df_50K[df_50K['education'] == ' Masters'])
+total_doct = len(df_50K[df_50K['education'] == ' Doctorate'])
+round((total_bach + total_mast + total_doct) / total_education*100, 1)
+
+# What percentage of people without advanced education make more than 50K?
+round((total_education -total_bach - total_mast - total_doct) / total_education*100,1)
+
+# What is the minimum number of hours a person works per week? <-- lucky boy!
+df['hours-per-week'].min()
+
+# What percentage of the people who work the minimum number of hours per week have a salary of more than 50K
+df_50K = df[df['salary'] == ' >50K']
+min_loc = df_50K.loc[(df_50K['hours-per-week'] == 1)]
+# there are 2 who works only 1 hour per week and have a salaray >50K
+lucky_guys = len(df_50K[df_50K['hours-per-week'] == 1])
+unlucky_guys = len(df_50K[df_50K['hours-per-week'] != 1])
+(lucky_guys / unlucky_guys)* 100
+# Sooooo, it is quite hard to get on that list.
+
+# What country has the highest percentage of people that earn >50K and what is that percentage?
+df_50K['native-country'].value_counts()
+# Yup, USA. And what is the percentage?
+usa = len(df_50K[df_50K['native-country'] == " United-States"])
+
+round(usa/ len(df_50K)*100,1)
+
+# the most popular occupation for those who earn >50K in India.
+df_50K['occupation'].value_counts()
