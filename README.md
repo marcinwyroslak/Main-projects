@@ -9,7 +9,7 @@ These projects were created in my spare time between my doctoral experiments ;) 
 
 I can't wait to finish my PhD...
 
-You will find here some things in general python, but I've tried to show my analytics skills.
+You will find here some things in general python (including OOP), but I've tried to show my analytics skills.
 
 Do not hestitate to contact me!
 
