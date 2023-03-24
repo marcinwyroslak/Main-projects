@@ -1,0 +1,60 @@
+import numpy as np
+import pandas as pd
+import re
+import spacy
+import plotly.graph_objs as go
+from plotly.offline import init_notebook_mode, iplot
+init_notebook_mode()
+import matplotlib.pyplot as plt
+import collections
+
+# Hi!   Today Im gonna send my new scientific article to Frontiers, so I decided to check if it fits!
+# That's a part of my data science journey :)
+
+# kaggle.com/datasets/markoarezina/frontiers-in-neuroscience-articles
+
+data=pd.read_csv("C:\course-files\\neuroscience_articles.csv")
+
+# Deleting records where papers do not have abstract.
+data = data.dropna(subset=['citation_abstract'])
+data.info()
+
+
+# There are a lot of columns that are unnecesarry to my analysis.
+
+columns_to_drop  = ['citation_author_email','citation_doi','citation_issn',
+                 'citation_journal_abbrev','citation_pages','citation_pdf_url','citation_volume',
+                 'dc.identifier','description','img','keywords','text','title','url','citation_publisher']
+data = data.drop(columns_to_drop, axis=1)
+
+
+# There are some null's here, so I will delete them.
+data.drop(data.columns[0], axis=1,inplace=True)
+data = data.dropna(subset=['citation_publication_date'])
+data.head(5)
+
+#From "citation_author_institution" column I wanted to extract country name and create a new column to
+# plot it. I don't why but it did not want to work with that column, so I converted it to string. 
+# Bar represents which countries publish their papers in Frontiers the most frequently.
+
+data['citation_country'] = data['citation_author_institution'].astype(str)
+data['citation_country'] = data['citation_country'].apply(lambda x: x.split(',')[-1].strip())
+country_freq = data['citation_country'].value_counts().head(20).plot.bar()
+
+# In the Polish article grading system 100/200 points is very good result. 
+#Today (24.03.2023) I am gonna submit my new article to Frontiers in Molecular Neuroscience, 
+# that has 100 points. 
+# So, I decided to ask which keywords are most frequent in articles in that journal to enhance the chances
+# of publishing in Fr. in Mol. Neuro.
+
+keywords_analysis = data[data['citation_journal_title'] == 'Frontiers in Cellular Neuroscience'].copy()
+keywords_analysis['citation_keywords'] = keywords_analysis['citation_keywords'].apply(lambda x: [a.strip() for a in x.lower().split(';')])
+
+all_keywords = [a for b in keywords_analysis.citation_keywords.tolist() for a in b]
+counter = collections.Counter(all_keywords)
+all_keywords = sorted( all_keywords, key=counter.get,reverse=True)
+
+[[a, counter.get(a)] for a in list(collections.OrderedDict.fromkeys(all_keywords))[:10]]
+
+# Well, That sounds great! Keywords of my paper are: [hippocampus,gaba,synaptic plasticity]
+# so I hope they will accept my paper and I will defend my PhD thesis!
