@@ -1,7 +1,5 @@
-# Python-codes
+# Hi! Good to see you!
 
-
-Hi! Good to see you!
 
 I created these files as my portfolio.
 
